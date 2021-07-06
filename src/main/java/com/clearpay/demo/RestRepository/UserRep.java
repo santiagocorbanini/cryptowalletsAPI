@@ -25,10 +25,11 @@ public class UserRep {
 
     public UpdateResult addWallet(String idUser, Wallet wallet){
         User user = find(idUser);
-        user.addBalance(wallet.getCurrency());
+        double sum = user.addBalance(wallet.getCurrency());
+
         return mongoTemplate.updateFirst(
                 new Query().addCriteria(Criteria.where("_id").is(idUser)),
-                new Update().addToSet( "wallets", wallet),
+                new Update().addToSet( "wallets", wallet).set("balance", sum),
                 User.class
         );
     }

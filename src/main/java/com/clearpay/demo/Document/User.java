@@ -67,7 +67,8 @@ public class User {
         this.wallets = wallets;
     }
 
-    public void addBalance(double money){
+    public double addBalance(double money){
         this.balance = this.balance + money;
+        return this.balance;
     }
 }
