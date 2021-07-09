@@ -15,6 +15,8 @@ public class Wallet {
 
     public double currency;
 
+    private String idUser;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date fecha = new Date();
 
@@ -53,4 +55,11 @@ public class Wallet {
         this.fecha = fecha;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
 }

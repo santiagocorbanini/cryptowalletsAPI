@@ -2,7 +2,9 @@ package com.clearpay.demo.Controller;
 
 import com.clearpay.demo.Document.Wallet;
 import com.clearpay.demo.Document.User;
+import com.clearpay.demo.Document.Transfer;
 import com.clearpay.demo.RestRepository.UserRep;
+import com.clearpay.demo.RestRepository.WalletRep;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,9 @@ public class UserController {
     @Autowired
     private UserRep userRep;
 
+    @Autowired
+    private WalletRep walletRep;
+
     @GetMapping("/users/")
     public List<User> findAll(){
         return userRep.findAll();
@@ -27,9 +32,10 @@ public class UserController {
         return userRep.save(user);
     }
 
-    @PostMapping("/users/{idUser}/addwallet")
-    public UpdateResult addWallet(@PathVariable("idUser") String idUser, @RequestBody Wallet wallet){
-        return  userRep.addWallet(idUser, wallet);
+    @PostMapping("/user/addwallet")
+    public Wallet addWallet(@RequestBody Wallet wallet){
+        //return  walletRep.addWallet(idUser, wallet);
+        return walletRep.save(wallet);
     }
 
     @GetMapping("/user/{idUser}")
@@ -41,4 +47,21 @@ public class UserController {
     public List<User> search(@PathVariable("searchUser") String searchUser){
         return userRep.search(searchUser);
     }
+
+    @PostMapping("/transfer")
+    public List<User> transferMoney(@RequestBody Transfer transfer){
+        userRep.transferMoney(transfer);
+        return userRep.findAll();
+    }
+
+    @GetMapping("/user/{idUser}/wallets")
+    public List<Wallet> findWallets(@PathVariable("idUser") String idUser){
+        return walletRep.findIdUser(idUser);
+    }
+
+    @GetMapping("/wallets/")
+    public List<Wallet> findAllWallets(){
+        return walletRep.findAll();
+    }
+
 }
