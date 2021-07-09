@@ -53,21 +53,4 @@ public class UserRep {
                 ))
         ),"User", User.class).getMappedResults();
     }
-
-    public void transferMoney(Transfer transfer){
-        User sender = find("60e464ed10e78f469a50d569");
-        User receiver = find("60e4fa275aa5c920a9fa981b");
-        System.out.println("Sender : " + sender.getName());
-        System.out.println("Receiver : " + receiver.getName());
-        System.out.println(transfer.getMoney());
-        System.out.println(transfer.getReceiver());
-
-
-        mongoTemplate.updateFirst(
-                new Query().addCriteria(Criteria.where("_id").is("60e464fe10e78f469a50d56c")),
-                new Update().addToSet("wallets", transfer.getMoney()),
-                User.class
-        );
-
-    }
 }

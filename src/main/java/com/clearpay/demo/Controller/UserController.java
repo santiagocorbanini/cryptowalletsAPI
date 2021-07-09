@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping("/user/addwallet")
     public Wallet addWallet(@RequestBody Wallet wallet){
-        //return  walletRep.addWallet(idUser, wallet);
+        walletRep.addWallet(wallet.getIdUser(), wallet);
         return walletRep.save(wallet);
     }
 
@@ -50,7 +50,8 @@ public class UserController {
 
     @PostMapping("/transfer")
     public List<User> transferMoney(@RequestBody Transfer transfer){
-        userRep.transferMoney(transfer);
+        walletRep.transferMoney(transfer);
+
         return userRep.findAll();
     }
 

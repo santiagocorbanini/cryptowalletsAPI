@@ -33,7 +33,7 @@ public class WalletRep {
 
         return mongoTemplate.updateFirst(
                 new Query().addCriteria(Criteria.where("_id").is(idUser)),
-                new Update().addToSet( "wallets", wallet).set("balance", sum),
+                new Update().set("balance", sum),
                 User.class
         );
     }
@@ -55,5 +55,24 @@ public class WalletRep {
                         Criteria.where("idUser").regex(idUser)
                 ))
         ),"wallet", Wallet.class).getMappedResults();
+    }
+
+    public void transferMoney(Transfer transfer){
+
+        Wallet sender =  find(transfer.getSender());
+        Wallet receiver =  find(transfer.getReceiver());
+
+        mongoTemplate.updateFirst(
+                new Query().addCriteria(Criteria.where("_id").is(sender.getId())),
+                new Update().set("currency", (sender.getCurrency() - transfer.getMoney())),
+                Wallet.class
+        );
+
+        mongoTemplate.updateFirst(
+                new Query().addCriteria(Criteria.where("_id").is(receiver.getId())),
+                new Update().set("currency", (receiver.getCurrency() + transfer.getMoney())),
+                Wallet.class
+        );
+
     }
 }
