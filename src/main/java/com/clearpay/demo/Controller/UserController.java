@@ -8,6 +8,7 @@ import com.clearpay.demo.RestRepository.WalletRep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -49,9 +50,13 @@ public class UserController {
 
     @PostMapping("/transfer")
     public List<User> transferMoney(@RequestBody Transfer transfer){
-        walletRep.transferMoney(transfer);
-
-        return userRep.findAll();
+        String confirm = walletRep.transferMoney(transfer);
+        List<User> lista = new ArrayList();
+        if (confirm == "okey"){
+            return userRep.findAll();
+        } else {
+            return lista;
+        }
     }
 
     @GetMapping("/user/{idUser}/wallets")

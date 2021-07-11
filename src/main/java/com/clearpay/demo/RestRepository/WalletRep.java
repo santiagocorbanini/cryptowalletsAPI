@@ -61,37 +61,44 @@ public class WalletRep {
         ),"wallet", Wallet.class).getMappedResults();
     }
 
-    public void transferMoney(Transfer transfer){
+    public String transferMoney(Transfer transfer){
 
+        String message;
         Wallet sender =  find(transfer.getSender());
-        Wallet receiver =  find(transfer.getReceiver());
 
-        User senderUser = userRep.find(sender.getIdUser());
-        User receiverUser = userRep.find(receiver.getIdUser());
+        if(sender.getCurrency() >= transfer.getMoney()) {
+            Wallet receiver = find(transfer.getReceiver());
 
-        mongoTemplate.updateFirst(
-                new Query().addCriteria(Criteria.where("_id").is(sender.getId())),
-                new Update().set("currency", (sender.getCurrency() - transfer.getMoney())),
-                Wallet.class
-        );
+            User senderUser = userRep.find(sender.getIdUser());
+            User receiverUser = userRep.find(receiver.getIdUser());
 
-        mongoTemplate.updateFirst(
-                new Query().addCriteria(Criteria.where("_id").is(receiver.getId())),
-                new Update().set("currency", (receiver.getCurrency() + transfer.getMoney())),
-                Wallet.class
-        );
+            mongoTemplate.updateFirst(
+                    new Query().addCriteria(Criteria.where("_id").is(sender.getId())),
+                    new Update().set("currency", (sender.getCurrency() - transfer.getMoney())),
+                    Wallet.class
+            );
 
-        mongoTemplate.updateFirst(
-                new Query().addCriteria(Criteria.where("_id").is(senderUser.getId())),
-                new Update().set("balance", (senderUser.getBalance() - transfer.getMoney())),
-                User.class
-        );
+            mongoTemplate.updateFirst(
+                    new Query().addCriteria(Criteria.where("_id").is(receiver.getId())),
+                    new Update().set("currency", (receiver.getCurrency() + transfer.getMoney())),
+                    Wallet.class
+            );
 
-        mongoTemplate.updateFirst(
-                new Query().addCriteria(Criteria.where("_id").is(receiverUser.getId())),
-                new Update().set("balance", (senderUser.getBalance() + transfer.getMoney())),
-                User.class
-        );
+            mongoTemplate.updateFirst(
+                    new Query().addCriteria(Criteria.where("_id").is(senderUser.getId())),
+                    new Update().set("balance", (senderUser.getBalance() - transfer.getMoney())),
+                    User.class
+            );
 
+            mongoTemplate.updateFirst(
+                    new Query().addCriteria(Criteria.where("_id").is(receiverUser.getId())),
+                    new Update().set("balance", (senderUser.getBalance() + transfer.getMoney())),
+                    User.class
+            );
+            message = "okey";
+        }else{
+            message = "fail";
+        }
+        return message;
     }
 }
