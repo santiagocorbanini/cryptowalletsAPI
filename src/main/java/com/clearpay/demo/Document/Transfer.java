@@ -20,6 +20,7 @@ public class Transfer {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date fecha = new Date();
 
+    //Constructor
     public Transfer() {
     }
 

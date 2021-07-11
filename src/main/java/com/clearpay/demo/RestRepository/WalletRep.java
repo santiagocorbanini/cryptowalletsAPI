@@ -31,9 +31,11 @@ public class WalletRep {
         User user = userRep.find(idUser);
         double sum = user.addBalance(wallet.getCurrency());
 
+        int sumWallets = user.addWallets();
+
         return mongoTemplate.updateFirst(
                 new Query().addCriteria(Criteria.where("_id").is(idUser)),
-                new Update().set("balance", sum),
+                new Update().set("balance", sum).set("wallets", sumWallets),
                 User.class
         );
     }
@@ -43,8 +45,10 @@ public class WalletRep {
     }
 
     public Wallet find(String idWallet){
+        Object obj=idWallet.replace("\"", "");
+
         return mongoTemplate.find(
-                new Query().addCriteria(Criteria.where("_id").is(idWallet)),
+                new Query().addCriteria(Criteria.where("_id").is(obj)),
                 Wallet.class)
                 .get(0);
     }
@@ -62,6 +66,9 @@ public class WalletRep {
         Wallet sender =  find(transfer.getSender());
         Wallet receiver =  find(transfer.getReceiver());
 
+        User senderUser = userRep.find(sender.getIdUser());
+        User receiverUser = userRep.find(receiver.getIdUser());
+
         mongoTemplate.updateFirst(
                 new Query().addCriteria(Criteria.where("_id").is(sender.getId())),
                 new Update().set("currency", (sender.getCurrency() - transfer.getMoney())),
@@ -72,6 +79,18 @@ public class WalletRep {
                 new Query().addCriteria(Criteria.where("_id").is(receiver.getId())),
                 new Update().set("currency", (receiver.getCurrency() + transfer.getMoney())),
                 Wallet.class
+        );
+
+        mongoTemplate.updateFirst(
+                new Query().addCriteria(Criteria.where("_id").is(senderUser.getId())),
+                new Update().set("balance", (senderUser.getBalance() - transfer.getMoney())),
+                User.class
+        );
+
+        mongoTemplate.updateFirst(
+                new Query().addCriteria(Criteria.where("_id").is(receiverUser.getId())),
+                new Update().set("balance", (senderUser.getBalance() + transfer.getMoney())),
+                User.class
         );
 
     }

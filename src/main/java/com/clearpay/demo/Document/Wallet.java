@@ -15,6 +15,7 @@ public class Wallet {
 
     public double currency;
 
+    //Id de User class
     private String idUser;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

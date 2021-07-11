@@ -47,9 +47,12 @@ public class UserRep {
     }
 
     public List<User> search(String search){
+
         return mongoTemplate.aggregate(Aggregation.newAggregation(
+
                 Aggregation.match(new Criteria().orOperator(
-                        Criteria.where("name").regex(search)
+
+                        Criteria.where("name").regex("(?i).*" + search + ".*")
                 ))
         ),"User", User.class).getMappedResults();
     }

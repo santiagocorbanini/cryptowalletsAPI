@@ -22,7 +22,7 @@ public class User {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date fecha = new Date();
 
-    private List<Wallet> wallets = new ArrayList<>();
+    private int wallets = 0;
 
     public User() {
     }
@@ -59,16 +59,20 @@ public class User {
         this.fecha = fecha;
     }
 
-    public List<Wallet> getWallets() {
+    public int getWallets() {
         return wallets;
     }
 
-    public void setWallets(List<Wallet> wallets) {
+    public void setWallets(int wallets) {
         this.wallets = wallets;
     }
 
     public double addBalance(double money){
         this.balance = this.balance + money;
         return this.balance;
+    }
+
+    public int addWallets(){
+        return this.wallets = this.wallets + 1;
     }
 }

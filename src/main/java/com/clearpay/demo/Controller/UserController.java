@@ -5,7 +5,6 @@ import com.clearpay.demo.Document.User;
 import com.clearpay.demo.Document.Transfer;
 import com.clearpay.demo.RestRepository.UserRep;
 import com.clearpay.demo.RestRepository.WalletRep;
-import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
