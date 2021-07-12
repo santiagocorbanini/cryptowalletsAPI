@@ -92,7 +92,7 @@ public class WalletRep {
 
             mongoTemplate.updateFirst(
                     new Query().addCriteria(Criteria.where("_id").is(receiverUser.getId())),
-                    new Update().set("balance", (senderUser.getBalance() + transfer.getMoney())),
+                    new Update().set("balance", (receiverUser.getBalance() + transfer.getMoney())),
                     User.class
             );
             message = "okey";
